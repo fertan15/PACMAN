@@ -57,6 +57,32 @@ char map [28][30]{
     {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'}
 }
 
+void menu() {
+
+    const int FRAME_HEIGHT = 30;
+    const int FRAME_WIDTH = 120;
+
+    //border -> kotak menu
+    for (int i = 0; i < FRAME_HEIGHT; i++) {
+        for (int j = 0; j < FRAME_WIDTH; j++) {
+            if (i == 0 && j == 0)
+                cout << (char)201; // kiri atas
+            else if (i == 0 && j == FRAME_WIDTH - 1)
+                cout << (char)187; // kanan atas
+            else if (i == FRAME_HEIGHT - 1 && j == 0)
+                cout << (char)200; // bawah kiri
+            else if (i == FRAME_HEIGHT - 1 && j == FRAME_WIDTH - 1)
+                cout << (char)188; // Bawah kanan
+            else if (i == 0 || i == FRAME_HEIGHT - 1)
+                cout << (char)205; // border horizontal
+            else if (j == 0 || j == FRAME_WIDTH - 1)
+                cout << (char)186; // border vertical
+            else
+                cout << " "; // spasi
+        }
+        cout << endl;
+    }
+}
 
 int main{
 
