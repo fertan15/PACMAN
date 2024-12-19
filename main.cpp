@@ -10,6 +10,11 @@
 
 using namespace std;
 
+struct xy {
+    int x, y;
+};
+
+
 void gotoxy(int x, int y) {
     COORD coordinate;
     coordinate.X = x;
