@@ -16,3 +16,13 @@ void gotoxy(int x, int y) {
     coordinate.Y = y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordinate);
 }
+
+
+int map [28][28]{
+    {''}
+}
+
+
+int main{
+
+}
