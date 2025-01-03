@@ -203,6 +203,7 @@ int menu() {
 }
 
 
-int main{
-    
+int main(){
+    int pil = menu();
+    return 0;
 }
