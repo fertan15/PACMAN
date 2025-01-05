@@ -1,19 +1,17 @@
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
-#include <cstdlib> // For rand() and srand()
-#include <ctime>   // For time()
+#include <cstdlib> 
+#include <ctime>   
 #include <iomanip>
 
 using namespace std;
 
-// Global variables for Pac-Man and ghost positions
 int pacmanX = 13;
 int pacmanY = 23;
 int ghostX = 12;
 int ghostY = 13;
 
-// Map definition
 char mapp[31][29] = {
         {'3','2','2','2','2','2','2','2','2','2','2','2','2','4','3','2','2','2','2','2','2','2','2','2','2','2','2','4'}, //0
         {'1',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1','1',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','1'}, //1
@@ -63,9 +61,9 @@ void printMap(int pacmanX, int pacmanY, int ghostX, int ghostY) {
     for (int i = 0; i < 31; ++i) {
         for (int j = 0; j < 29; ++j) {
             if (i == pacmanY && j == pacmanX) {
-                cout << 'P'; // Display Pac-Man
+                cout << 'P'; 
             } else if (i == ghostY && j == ghostX) {
-                cout << 'W'; // Display the ghost
+                cout << 'W'; 
             } else if (mapp[i][j] == '1')
                 cout << (char)186;
             else if (mapp[i][j] == '2')
@@ -115,45 +113,44 @@ void move_pacman() {
                 break;
             case 'q':
             case 'Q':
-                exit(0); // Quit the game
+                exit(0); 
         }
     }
 }
 
 void move_ghost() {
-    int lastDirection = -1; // Variable to store the last direction moved
-    int direction = rand() % 4; // Randomly choose a direction
+    int lastDirection = -1; 
+    int direction = rand() % 4; 
 
-    // Check for valid moves and avoid repeating the last move
     for (int i = 0; i < 4; ++i) {
-        direction = (direction + 1) % 4; // Cycle through directions
+        direction = (direction + 1) % 4; 
         switch (direction) {
-            case 0: // Move up
+            case 0: 
                 if (ghostY > 0 && mapp[ghostY - 1][ghostX] == ' ') {
                     ghostY--;
                     lastDirection = 0;
-                    return; // Exit after moving
+                    return; 
                 }
                 break;
-            case 1: // Move down
+            case 1: 
                 if (ghostY < 30 && mapp[ghostY + 1][ghostX] == ' ') {
                     ghostY++;
                     lastDirection = 1;
-                    return; // Exit after moving
+                    return; 
                 }
                 break;
-            case 2: // Move left
+            case 2: 
                 if (ghostX > 0 && mapp[ghostY][ghostX - 1] == ' ') {
                     ghostX--;
                     lastDirection = 2;
-                    return; // Exit after moving
+                    return; 
                 }
                 break;
-            case 3: // Move right
+            case 3: 
                 if (ghostX < 28 && mapp[ghostY][ghostX + 1] == ' ') {
                     ghostX++;
                     lastDirection = 3;
-                    return; // Exit after moving
+                    return; 
                 }
                 break;
         }
@@ -161,13 +158,13 @@ void move_ghost() {
 }
 
 int main() {
-    srand((time(0))); // Seed for random number generation
+    srand((time(0))); 
     while (true) {
-        system("cls"); // Clear the console
-        printMap(pacmanX, pacmanY, ghostX, ghostY); // Draw the map with Pac-Man and the ghost
-        move_pacman(); // Handle Pac-Man's movement
-        move_ghost(); // Handle ghost's movement
-        Sleep(100); // Pause for a short duration to control the speed of movement
+        system("cls"); 
+        printMap(pacmanX, pacmanY, ghostX, ghostY); 
+        move_pacman(); 
+        move_ghost(); 
+        Sleep(100); 
     }
 
     return 0;
