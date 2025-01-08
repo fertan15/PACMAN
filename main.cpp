@@ -16,6 +16,7 @@ int pacmanX = 13;
 int pacmanY = 23;
 int ghostX = 12;
 int ghostY = 13;
+char input = 'd';
 
 string yellow = "\033[33m";
 string blue = "\033[34m";
@@ -96,38 +97,40 @@ void printMap(int pacmanX, int pacmanY, int ghostX, int ghostY) {
 }
 
 void move_pacman() {
-    if (_kbhit()) {
-        char input = _getch();
-        switch (input ) {
-            case 'w':
-            case 'W':
-                if (pacmanY > 0 && mapp[pacmanY - 1][pacmanX] == ' ') {
-                    pacmanY--;
-                }
-                break;
-            case 's':
-            case 'S':
-                if (pacmanY < 30 && mapp[pacmanY + 1][pacmanX] == ' ') {
-                    pacmanY++;
-                }
-                break;
-            case 'a':
-            case 'A':
-                if (pacmanX > 0 && mapp[pacmanY][pacmanX - 1] == ' ') {
-                    pacmanX--;
-                }
-                break;
-            case 'd':
-            case 'D':
-                if (pacmanX < 28 && mapp[pacmanY][pacmanX + 1] == ' ') {
-                    pacmanX++;
-                }
-                break;
-            case 'q':
-            case 'Q':
-                exit(0); // Quit the game
-        }
+
+    if(kbhit())
+    input = _getch();
+
+    switch (input ) {
+        case 'w':
+        case 'W':
+            if (pacmanY > 0 && mapp[pacmanY - 1][pacmanX] == ' ') {
+                pacmanY--;
+            }
+            break;
+        case 's':
+        case 'S':
+            if (pacmanY < 30 && mapp[pacmanY + 1][pacmanX] == ' ') {
+                pacmanY++;
+            }
+            break;
+        case 'a':
+        case 'A':
+            if (pacmanX > 0 && mapp[pacmanY][pacmanX - 1] == ' ') {
+                pacmanX--;
+            }
+            break;
+        case 'd':
+        case 'D':
+            if (pacmanX < 28 && mapp[pacmanY][pacmanX + 1] == ' ') {
+                pacmanX++;
+            }
+            break;
+        case 'q':
+        case 'Q':
+            exit(0); // Quit the game
     }
+    
 }
 
 void move_ghost() {
@@ -257,6 +260,7 @@ int menu() {
     }
 }
 
+
 void play(int &score)
 {
     //cout << "PACMAN" << endl;
@@ -272,6 +276,7 @@ void play(int &score)
     }
     //system("pause");
 }
+
 
 int main(){
     srand((time(0))); // Seed for random number generation
