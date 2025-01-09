@@ -20,9 +20,9 @@ struct xy {
 };
 
 struct player {
-    int x, y;
+    int x, y, score;
     char shape;
-    string color;
+    string color,name;
 };
 
 
@@ -32,6 +32,53 @@ void gotoxy(int x, int y) {
     coordinate.Y = y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordinate);
 }
+
+void cek_file_leaderboard()
+{
+    fstream myFile;
+    myFile.open("leaderboard.txt", ios::out | ios::app);
+    myFile.close();
+}
+void upload_score(string name, int score){
+    fstream myFile;
+    myFile.open("leaderboard.txt", ios::app);
+    if(myFile.is_open())
+    {
+        myFile << name << endl;
+        myFile << score << endl;
+    }
+    myFile.close();
+}
+
+void view_leaderboard(){
+    vector<player> players;
+
+    fstream myFile;
+    myFile.open("leaderboard.txt", ios::in);
+    if (myFile.is_open()) {
+        player p;
+        while (myFile >> p.name >> p.score) {
+            players.push_back(p);
+        }
+        myFile.close();
+    }
+
+    sort(players.begin(), players.end(), [](player a, player b) {
+        return a.score > b.score;
+    });
+
+    // Display
+    system("cls");
+    cout << "========== LEADERBOARD ==========" << endl;
+    cout << "RANK   NAME               SCORE" << endl;
+    for (size_t i = 0; i < players.size() && i < 5; i++) { // Display top 10
+        cout << left << i + 1 << setw(6) << "." << setw(19) << players[i].name << players[i].score << endl;
+    }
+    cout << endl << endl << endl << endl;
+    system("pause");
+}
+
+
 
 char mapp[32][29];
 // Map initialize
@@ -424,6 +471,7 @@ void play(int &score, string &name)
 }
 
 int main(){
+    cek_file_leaderboard();
     srand((time(0))); // Seed for random number generation
     int pil;
     do{
@@ -435,10 +483,12 @@ int main(){
             //play
             case 1 :
                 play(score, name);
+                upload_score(name,score);
                 break;
 
             //leaderboard
             case 2:
+                view_leaderboard();
                 break;
             }
 
