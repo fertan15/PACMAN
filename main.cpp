@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
@@ -20,7 +21,7 @@ struct xy {
 };
 
 struct player {
-    int x, y, score;
+    int x, y, score,dir;
     char shape;
     string color,name;
 };
@@ -162,8 +163,14 @@ void printMap() {
 
 void move_pacman(player &pacman, char &input) {
     //kalo ada ganti arah
+    char before = input;
+
     if (_kbhit())
         input = _getch();
+
+    //BIAR GA STOP KALO PENCET KEY RANDOM
+    if(input != 'W' && input != 'w' && input != 'A' && input != 'a' && input != 'S' && input != 's' && input != 'D' && input != 'd')
+         input = before;
 
     //hapus posisi sblumnya
     gotoxy(pacman.x, pacman.y-2);
@@ -203,6 +210,7 @@ void move_pacman(player &pacman, char &input) {
             if (pacman.x < 28 && (mapp[pacman.y][pacman.x + 1] == '0' || mapp[pacman.y][pacman.x + 1] == '8'  || mapp[pacman.y][pacman.x + 1] == 'p' ) ) {
                 pacman.x++;
                 pacman.shape = '<';
+                break;
             }
     }
 
@@ -307,13 +315,15 @@ void cek_pacman(player pacman, int &score, bool &power)
         mapp[pacman.y][pacman.x] = '8';
         Beep(1500, 100);
     }
-    if(mapp[pacman.y][pacman.x] == 'p')
+    else if(mapp[pacman.y][pacman.x] == 'p')
     {
         power = true; //enter hunting mode
         mapp[pacman.y][pacman.x] = '8';
         Beep(550, 350);
         Sleep(500);
     }
+    else
+        Sleep(100);
 
      return;
 }
@@ -337,7 +347,11 @@ bool isCollide(player &pacman, player ghost[4], bool power)
     }
 }
 
-void move_ghost(player &ghost) {
+
+void move_ghost(player &ghost, int &current_dir) {
+
+    // Define direction codes for easier reference
+    const int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
     // Erase ghost's current position
     gotoxy(ghost.x, ghost.y - 2);
     if (mapp[ghost.y][ghost.x] == '8') // Path without coin
@@ -347,61 +361,56 @@ void move_ghost(player &ghost) {
     else if (mapp[ghost.y][ghost.x] == 'p') // Power pellet
         cout << yellow << 'o' << reset;
 
-    // Store previous position
-    int oldX = ghost.x;
-    int oldY = ghost.y;
+    //kalo lewat tunnel
+    if(ghost.y == 15 && ghost.x > 26)
+        ghost.x = 1;
+    else if(ghost.y == 15 && ghost.x < 1)
+            ghost.x = 27;
 
-    int direction = rand() % 4; // Random initial direction
+    // Define all possible movements (dx, dy) for UP, DOWN, LEFT, RIGHT
+    vector<pair<int, int>> directions = {
+        {0, -1}, // UP
+        {0, 1},  // DOWN
+        {-1, 0}, // LEFT
+        {1, 0}   // RIGHT
+    };
 
-    // Try all 4 directions until a valid move is found
+    // Reverse direction mapping
+    int reverse_dir = -1;
+    if (current_dir == UP) reverse_dir = DOWN;
+    if (current_dir == DOWN) reverse_dir = UP;
+    if (current_dir == LEFT) reverse_dir = RIGHT;
+    if (current_dir == RIGHT) reverse_dir = LEFT;
+
+    // Filter valid moves, excluding reverse direction
+    vector<int> valid_moves;
     for (int i = 0; i < 4; ++i) {
-        switch (direction) {
-            case 0: // Move up
-                if (ghost.y > 0 &&
-                    (mapp[ghost.y - 1][ghost.x] == '0' ||
-                     mapp[ghost.y - 1][ghost.x] == '8' ||
-                     mapp[ghost.y - 1][ghost.x] == 'p')) {
-                    ghost.y--;
-                }
-                break;
-            case 1: // Move down
-                if (ghost.y < 30 &&
-                    (mapp[ghost.y + 1][ghost.x] == '0' ||
-                     mapp[ghost.y + 1][ghost.x] == '8' ||
-                     mapp[ghost.y + 1][ghost.x] == 'p')) {
-                    ghost.y++;
-                }
-                break;
-            case 2: // Move left
-                if (ghost.x > 0 &&
-                    (mapp[ghost.y][ghost.x - 1] == '0' ||
-                     mapp[ghost.y][ghost.x - 1] == '8' ||
-                     mapp[ghost.y][ghost.x - 1] == 'p')) {
-                    ghost.x--;
-                }
-                break;
-            case 3: // Move right
-                if (ghost.x < 28 &&
-                    (mapp[ghost.y][ghost.x + 1] == '0' ||
-                     mapp[ghost.y][ghost.x + 1] == '8' ||
-                     mapp[ghost.y][ghost.x + 1] == 'p')) {
-                    ghost.x++;
-                }
-                break;
+        if (i == reverse_dir) continue; // Exclude reverse direction
+        int new_x = ghost.x + directions[i].first;
+        int new_y = ghost.y + directions[i].second;
+        char map_cell = mapp[new_y][new_x];
+        // Check that the new position is a valid path
+        if (map_cell == '0' || map_cell == '8' || map_cell == 'p') {
+            valid_moves.push_back(i);
         }
-
-        // Check if ghost moved; if not, try next direction
-        if (oldX != ghost.x || oldY != ghost.y)
-            break;
-
-        // Try the next direction
-        direction = (direction + 1) % 4;
     }
 
-    // Draw ghost at new position
+    // Choose a random valid direction if any are available
+    if (!valid_moves.empty()) {
+        srand(time(NULL) ^ ghost.x ^ ghost.y);
+        current_dir = valid_moves[rand() % valid_moves.size()];
+        ghost.x += directions[current_dir].first;
+        ghost.y += directions[current_dir].second;
+    }
+
+    // Draw the ghost in its new position
     gotoxy(ghost.x, ghost.y - 2);
     cout << ghost.color << ghost.shape << reset;
 }
+
+
+
+
 
 void play(int &score, string &name)
 {
@@ -416,26 +425,32 @@ void play(int &score, string &name)
 
     //ghost initialize
     player ghost[4];
-
+    //dir = direction || UP = 0,  DOWN = 1,  LEFT = 2,  RIGHT = 3.
+    //setan kiri atas
     ghost[0].x = 1;
     ghost[0].y = 2;
     ghost[0].shape= '"';
     ghost[0].color= "\033[41m";
-
+    ghost[0].dir = 3;
+    //setan kanan atas
     ghost[1].x = 26;
     ghost[1].y = 3;
     ghost[1].shape= '"';
-    ghost[1].color= "\033[44m";
+    ghost[1].color= "\033[46m";
 
+    ghost[1].dir = 2;
+    //setan kiri bawah
     ghost[2].x = 1;
     ghost[2].y = 30;
     ghost[2].shape= '"';
     ghost[2].color= "\033[42m";
-
+    ghost[2].dir = 0;
+    //setan kanan bawah
     ghost[3].x = 26;
     ghost[3].y = 30;
     ghost[3].shape= '"';
     ghost[3].color= "\033[43m";
+    ghost[3].dir = 0;
 
     //initialize cetak2
     gotoxy(0,0);
@@ -446,12 +461,10 @@ void play(int &score, string &name)
         bool power = false;
     do{
         move_pacman(pacman,input);
-
-
-        move_ghost(ghost[0]);
-        move_ghost(ghost[1]);
-        move_ghost(ghost[2]);
-        move_ghost(ghost[3]);
+        move_ghost(ghost[0], ghost[0].dir);
+        move_ghost(ghost[1], ghost[1].dir);
+        move_ghost(ghost[2], ghost[2].dir);
+        move_ghost(ghost[3], ghost[3].dir);
         cek_pacman(pacman, score, power); // <- per-pelet peletan
         Sleep(100);
         gotoxy(40, 6);
@@ -462,7 +475,7 @@ void play(int &score, string &name)
     }while(!isCollide(pacman, ghost,power));
     Beep(5000, 1000);
     gotoxy(40, 12);
-        cout << "GAME OVERR!!!"; Sleep(500);
+        cout << "GAME OVER"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." << endl;
     gotoxy(40, 13);
         cout <<"PLEASE INSERT YOUR NAME : "; cin >> name; Sleep(500);
     gotoxy(40, 16);
