@@ -39,6 +39,7 @@ void cek_file_leaderboard()
     myFile.open("leaderboard.txt", ios::out | ios::app);
     myFile.close();
 }
+
 void upload_score(string name, int score){
     fstream myFile;
     myFile.open("leaderboard.txt", ios::app);
@@ -78,13 +79,11 @@ void view_leaderboard(){
     system("pause");
 }
 
-
-
 char mapp[32][29];
-// Map initialize
+
 char mapp_ori[32][29] = {
         {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-       {'3','2','2','2','2','2','2','2','2','2','2','2','2','4','3','2','2','2','2','2','2','2','2','2','2','2','2','4'}, //0
+        {'3','2','2','2','2','2','2','2','2','2','2','2','2','4','3','2','2','2','2','2','2','2','2','2','2','2','2','4'}, //0
         {'1','p','0','0','0','0','0','0','0','0','0','0','0','1','1','0','0','0','0','0','0','0','0','0','0','0','p','1'}, //1
         {'1','0','3','2','2','4','0','3','2','2','2','4','0','1','1','0','3','2','2','2','4','0','3','2','2','4','0','1'}, //2
         {'1','0','1',' ',' ','1','0','1',' ',' ',' ','1','0','1','1','0','1',' ',' ',' ','1','0','1',' ',' ','1','0','1'}, //3
@@ -123,8 +122,6 @@ void reset_map()
         for (int j = 0; j < 29; ++j)
             mapp[i][j] = mapp_ori[i][j];
 }
-
-
 
 void printMap() {
 
@@ -318,8 +315,7 @@ void cek_pacman(player pacman, int &score, bool &power)
      return;
 }
 
-
-bool isCollide(player &pacman, player ghost[4], bool power)
+bool isCollide(player &pacman, player ghost[3], bool power)
 {
     if(power)
         return false;
@@ -337,7 +333,7 @@ bool isCollide(player &pacman, player ghost[4], bool power)
     }
 }
 
-void move_ghost(player &ghost) {
+void move_ghost(player &ghost, player &pacman, bool power) {
     // Erase ghost's current position
     gotoxy(ghost.x, ghost.y - 2);
     if (mapp[ghost.y][ghost.x] == '8') // Path without coin
@@ -351,113 +347,99 @@ void move_ghost(player &ghost) {
     int oldX = ghost.x;
     int oldY = ghost.y;
 
-    int direction = rand() % 4; // Random initial direction
-
-    // Try all 4 directions until a valid move is found
-    for (int i = 0; i < 4; ++i) {
-        switch (direction) {
-            case 0: // Move up
-                if (ghost.y > 0 &&
-                    (mapp[ghost.y - 1][ghost.x] == '0' ||
-                     mapp[ghost.y - 1][ghost.x] == '8' ||
-                     mapp[ghost.y - 1][ghost.x] == 'p')) {
-                    ghost.y--;
-                }
-                break;
-            case 1: // Move down
-                if (ghost.y < 30 &&
-                    (mapp[ghost.y + 1][ghost.x] == '0' ||
-                     mapp[ghost.y + 1][ghost.x] == '8' ||
-                     mapp[ghost.y + 1][ghost.x] == 'p')) {
-                    ghost.y++;
-                }
-                break;
-            case 2: // Move left
-                if (ghost.x > 0 &&
-                    (mapp[ghost.y][ghost.x - 1] == '0' ||
-                     mapp[ghost.y][ghost.x - 1] == '8' ||
-                     mapp[ghost.y][ghost.x - 1] == 'p')) {
-                    ghost.x--;
-                }
-                break;
-            case 3: // Move right
-                if (ghost.x < 28 &&
-                    (mapp[ghost.y][ghost.x + 1] == '0' ||
-                     mapp[ghost.y][ghost.x + 1] == '8' ||
-                     mapp[ghost.y][ghost.x + 1] == 'p')) {
-                    ghost.x++;
-                }
-                break;
+        if (power) {
+        // Move away from Pac-Man
+            if (ghost.x < pacman.x && ghost.x > 0 &&
+                (mapp[ghost.y][ghost.x - 1] == '0' || mapp[ghost.y][ghost.x - 1] == '8' || mapp[ghost.y][ghost.x - 1] == 'p')) {
+                ghost.x--;
+            } else if (ghost.x > pacman.x && ghost.x < 28 &&
+                       (mapp[ghost.y][ghost.x + 1] == '0' || mapp[ghost.y][ghost.x + 1] == '8' || mapp[ghost.y][ghost.x + 1] == 'p')) {
+                ghost.x++;
+            } else if (ghost.y < pacman.y && ghost.y > 0 &&
+                       (mapp[ghost.y - 1][ghost.x] == '0' || mapp[ghost.y - 1][ghost.x] == '8' || mapp[ghost.y - 1][ghost.x] == 'p')) {
+                ghost.y--;
+            } else if (ghost.y > pacman.y && ghost.y < 30 &&
+                       (mapp[ghost.y + 1][ghost.x] == '0' || mapp[ghost.y + 1][ghost.x] == '8' || mapp[ghost.y + 1][ghost.x] == 'p')) {
+                ghost.y++;
+            }
+        }
+        else {
+            // Chase Pac-Man
+            if (ghost.x > pacman.x && ghost.x > 0 &&
+                (mapp[ghost.y][ghost.x - 1] == '0' || mapp[ghost.y][ghost.x - 1] == '8' || mapp[ghost.y][ghost.x - 1] == 'p')) {
+                ghost.x--; //kenanan
+            } else if (ghost.x < pacman.x && ghost.x < 28 &&
+                       (mapp[ghost.y][ghost.x + 1] == '0' || mapp[ghost.y][ghost.x + 1] == '8' || mapp[ghost.y][ghost.x + 1] == 'p')) {
+                ghost.x++; //kekiri
+            } else if (ghost.y > pacman.y && ghost.y > 0 &&
+                       (mapp[ghost.y - 1][ghost.x] == '0' || mapp[ghost.y - 1][ghost.x] == '8' || mapp[ghost.y - 1][ghost.x] == 'p')) {
+                ghost.y--; //keatas
+            } else if (ghost.y < pacman.y && ghost.y < 30 &&
+                       (mapp[ghost.y + 1][ghost.x] == '0' || mapp[ghost.y + 1][ghost.x] == '8' || mapp[ghost.y + 1][ghost.x] == 'p')) {
+                ghost.y++; //kebawah
+            }
         }
 
-        // Check if ghost moved; if not, try next direction
-        if (oldX != ghost.x || oldY != ghost.y)
-            break;
-
-        // Try the next direction
-        direction = (direction + 1) % 4;
-    }
-
-    // Draw ghost at new position
+    // Render ghost's new position
     gotoxy(ghost.x, ghost.y - 2);
     cout << ghost.color << ghost.shape << reset;
 }
 
-void play(int &score, string &name)
+void play(int &score, string name)
 {
     reset_map();
 
-    //pacman initialize
+    // Pacman initialize
     player pacman;
     pacman.x = 13;
     pacman.y = 18;
     pacman.shape = '<';
-    char input ='D';
+    char input = 'D';
 
-    //ghost initialize
+    // Ghost initialize
     player ghost[4];
 
     ghost[0].x = 1;
     ghost[0].y = 2;
-    ghost[0].shape= '"';
-    ghost[0].color= "\033[41m";
+    ghost[0].shape = '"';
+    ghost[0].color = "\033[41m";
 
     ghost[1].x = 26;
     ghost[1].y = 3;
-    ghost[1].shape= '"';
-    ghost[1].color= "\033[44m";
+    ghost[1].shape = '"';
+    ghost[1].color = "\033[44m";
 
     ghost[2].x = 1;
     ghost[2].y = 30;
-    ghost[2].shape= '"';
-    ghost[2].color= "\033[42m";
+    ghost[2].shape = '"';
+    ghost[2].color = "\033[42m";
 
     ghost[3].x = 26;
     ghost[3].y = 30;
-    ghost[3].shape= '"';
-    ghost[3].color= "\033[43m";
+    ghost[3].shape = '"';
+    ghost[3].color = "\033[43m";
 
-    //initialize cetak2
-    gotoxy(0,0);
-        printMap(); // cetak map
-    gotoxy(pacman.x,pacman.y-2);
-        cout << yellow << pacman.shape << reset;
-        //kalo makan power pelet
-        bool power = false;
-    do{
-        move_pacman(pacman,input);
+    // Initialize print
+    gotoxy(0, 0);
+    printMap(); // Print map
+    gotoxy(pacman.x, pacman.y - 2);
+    cout << yellow << pacman.shape << reset;
 
+    // If Pacman eats power pellet
+    bool power = false;
+    do {
+        move_pacman(pacman, input);
 
-        move_ghost(ghost[0]);
-        move_ghost(ghost[1]);
-        move_ghost(ghost[2]);
-        move_ghost(ghost[3]);
-        cek_pacman(pacman, score, power); // <- per-pelet peletan
+        for (int i = 0; i < 4; i++) {
+            move_ghost(ghost[i], pacman, power);
+        }
+
+        cek_pacman(pacman, score, power); // pelettt pelettan
         Sleep(100);
-        gotoxy(40, 6);
-            cout << "SCORE : " << score;
-        gotoxy(40, 9);
-            cout << "USE W/A/S/D TO MOVE";
+        gotoxy(50, 6);
+        cout << "Score : " << score;
+        gotoxy(50, 9);
+        cout << "Use W/A/S/D To Move";
 
     }while(!isCollide(pacman, ghost,power));
     Beep(5000, 1000);
@@ -469,33 +451,31 @@ void play(int &score, string &name)
         cout << "G"; Sleep(100);cout << "O"; Sleep(100);cout << "I"; Sleep(100);cout << "N"; Sleep(100);cout << "G "; Sleep(100);cout << "B"; Sleep(100);cout << "A"; Sleep(100);cout << "C"; Sleep(100);cout << "K "; Sleep(100);cout << "T"; Sleep(100);cout << "O "; Sleep(100);cout << "M"; Sleep(100);cout << "A"; Sleep(100);cout << "I"; Sleep(100);cout << "N "; Sleep(100);cout << "M"; Sleep(100);cout << "E"; Sleep(100);cout << "N"; Sleep(100);cout << "U"; Sleep(100);
         cout << "."; Sleep(500);cout << "."; Sleep(500);cout << "."; Sleep(500);
 }
-
-int main(){
+int main() {
     cek_file_leaderboard();
     srand((time(0))); // Seed for random number generation
     int pil;
-    do{
-            int score=0;
-            string name = "";
-            pil = menu();
-            switch(pil)
-            {
-            //play
-            case 1 :
+    do {
+        int score = 0;
+        string name="";
+        pil = menu();
+        switch (pil) {
+            // Play
+            case 1:
                 play(score, name);
                 upload_score(name,score);
                 break;
 
-            //leaderboard
+            // Leaderboard
             case 2:
                 view_leaderboard();
                 break;
-            }
+        }
 
-    }while(pil!=3);
+    } while (pil != 3);
 
     system("cls");
-    cout << "Thank You For Playing" ; Sleep(100);
+    cout << "Thank You For Playing"; Sleep(100);
     cout << "."; Sleep(500);
     cout << "."; Sleep(500);
     cout << "."; Sleep(500);
