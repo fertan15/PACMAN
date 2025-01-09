@@ -396,16 +396,9 @@ void move_pacman(player &pacman, char &input) {
     cout << ' ';
 
     if(pacman.y == 15 && pacman.x > 26)
-    {
         pacman.x = 1;
-
-    }
     else if(pacman.y == 15 && pacman.x < 1)
-        {
             pacman.x = 27;
-
-        }
-
 
     //jalan
     switch (input) {
@@ -532,6 +525,22 @@ int menu() {
     }
 }
 
+void cek_pacman(player pacman, int &score, bool &power)
+{
+    if(mapp[pacman.y][pacman.x] == '0')
+    {
+        score+=100; //1 pelet 100 point
+        mapp[pacman.y][pacman.x] = '8';
+    }
+    if(mapp[pacman.y][pacman.x] == 'p')
+    {
+        power = true; //enter hunting mode
+        mapp[pacman.y][pacman.x] = '8';
+    }
+     return;
+}
+
+
 bool isCollide(player &pacman, player ghost[3])
 {
     if(pacman.x == ghost[0].x && pacman.y == ghost[0].y)
@@ -542,7 +551,6 @@ bool isCollide(player &pacman, player ghost[3])
         return true;
     else
         return false;
-
 }
 
 void play(int &score)
@@ -566,12 +574,18 @@ void play(int &score)
         printMap(); // cetak map
     gotoxy(pacman.x,pacman.y-2);
         cout << yellow << pacman.shape << reset;
-
+        //kalo makan power pelet
+        bool power = false;
     do{
         move_pacman(pacman,input);
+        cek_pacman(pacman, score, power); // <- per-pelet peletan
+        Sleep(200);
+        gotoxy(50, 6);
+            cout << "Score : " << score;
+        gotoxy(50, 9);
+            cout << "Use W/A/S/D To Move";
 
-        Sleep(100);
-    }while(!isCollide(pacman, ghost));
+    }while(!isCollide(pacman, ghost) || power == false);
     system("pause");
 }
 
