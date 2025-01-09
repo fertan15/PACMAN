@@ -7,8 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <iomanip>
-#include <cstdlib> // For rand() and srand()
-#include <ctime>   // For time()
+
 using namespace std;
 
 
@@ -273,7 +272,7 @@ void cek_pacman(player pacman, int &score, bool &power)
 }
 
 
-bool isCollide(player &pacman, player ghost[3], bool power)
+bool isCollide(player &pacman, player ghost[4], bool power)
 {
     if(power)
         return false;
@@ -357,7 +356,7 @@ void move_ghost(player &ghost) {
     cout << ghost.color << ghost.shape << reset;
 }
 
-void play(int &score)
+void play(int &score, string &name)
 {
     reset_map();
 
@@ -408,28 +407,34 @@ void play(int &score)
         move_ghost(ghost[3]);
         cek_pacman(pacman, score, power); // <- per-pelet peletan
         Sleep(100);
-        gotoxy(50, 6);
-            cout << "Score : " << score;
-        gotoxy(50, 9);
-            cout << "Use W/A/S/D To Move";
+        gotoxy(40, 6);
+            cout << "SCORE : " << score;
+        gotoxy(40, 9);
+            cout << "USE W/A/S/D TO MOVE";
 
     }while(!isCollide(pacman, ghost,power));
     Beep(5000, 1000);
-    system("pause");
+    gotoxy(40, 12);
+        cout << "GAME OVERR!!!"; Sleep(500);
+    gotoxy(40, 13);
+        cout <<"PLEASE INSERT YOUR NAME : "; cin >> name; Sleep(500);
+    gotoxy(40, 16);
+        cout << "G"; Sleep(100);cout << "O"; Sleep(100);cout << "I"; Sleep(100);cout << "N"; Sleep(100);cout << "G "; Sleep(100);cout << "B"; Sleep(100);cout << "A"; Sleep(100);cout << "C"; Sleep(100);cout << "K "; Sleep(100);cout << "T"; Sleep(100);cout << "O "; Sleep(100);cout << "M"; Sleep(100);cout << "A"; Sleep(100);cout << "I"; Sleep(100);cout << "N "; Sleep(100);cout << "M"; Sleep(100);cout << "E"; Sleep(100);cout << "N"; Sleep(100);cout << "U"; Sleep(100);
+        cout << "."; Sleep(500);cout << "."; Sleep(500);cout << "."; Sleep(500);
 }
-
 
 int main(){
     srand((time(0))); // Seed for random number generation
     int pil;
     do{
             int score=0;
+            string name = "";
             pil = menu();
             switch(pil)
             {
             //play
             case 1 :
-                play(score);
+                play(score, name);
                 break;
 
             //leaderboard
