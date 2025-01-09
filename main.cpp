@@ -259,12 +259,16 @@ void cek_pacman(player pacman, int &score, bool &power)
     {
         score+=100; //1 pelet 100 point
         mapp[pacman.y][pacman.x] = '8';
+        Beep(1500, 100);
     }
     if(mapp[pacman.y][pacman.x] == 'p')
     {
         power = true; //enter hunting mode
         mapp[pacman.y][pacman.x] = '8';
+        Beep(550, 350);
+        Sleep(500);
     }
+
      return;
 }
 
@@ -396,18 +400,21 @@ void play(int &score)
         bool power = false;
     do{
         move_pacman(pacman,input);
+
+
         move_ghost(ghost[0]);
         move_ghost(ghost[1]);
         move_ghost(ghost[2]);
         move_ghost(ghost[3]);
         cek_pacman(pacman, score, power); // <- per-pelet peletan
-        Sleep(200);
+        Sleep(100);
         gotoxy(50, 6);
             cout << "Score : " << score;
         gotoxy(50, 9);
             cout << "Use W/A/S/D To Move";
 
     }while(!isCollide(pacman, ghost,power));
+    Beep(5000, 1000);
     system("pause");
 }
 
