@@ -416,7 +416,57 @@ void move_ghost(player &ghost, int &current_dir) {
     cout << ghost.color << ghost.shape << reset;
 }
 
+void move_ghost_hard(player &ghost, player &pacman, bool power) {
+    // Erase ghost's current position
+    gotoxy(ghost.x, ghost.y - 2);
+    if (mapp[ghost.y][ghost.x] == '8') // Path without coin
+        cout << ' ';
+    else if (mapp[ghost.y][ghost.x] == '0') // Coin
+        cout << yellow << '.' << reset;
+    else if (mapp[ghost.y][ghost.x] == 'p') // Power pellet
+        cout << yellow << 'o' << reset;
 
+    // Store previous position
+    int oldX = ghost.x;
+    int oldY = ghost.y;
+
+        if (power) {
+        // Move away from Pac-Man
+            if (ghost.x < pacman.x && ghost.x > 0 &&
+                (mapp[ghost.y][ghost.x - 1] == '0' || mapp[ghost.y][ghost.x - 1] == '8' || mapp[ghost.y][ghost.x - 1] == 'p')) {
+                ghost.x--;
+            } else if (ghost.x > pacman.x && ghost.x < 28 &&
+                       (mapp[ghost.y][ghost.x + 1] == '0' || mapp[ghost.y][ghost.x + 1] == '8' || mapp[ghost.y][ghost.x + 1] == 'p')) {
+                ghost.x++;
+            } else if (ghost.y < pacman.y && ghost.y > 0 &&
+                       (mapp[ghost.y - 1][ghost.x] == '0' || mapp[ghost.y - 1][ghost.x] == '8' || mapp[ghost.y - 1][ghost.x] == 'p')) {
+                ghost.y--;
+            } else if (ghost.y > pacman.y && ghost.y < 30 &&
+                       (mapp[ghost.y + 1][ghost.x] == '0' || mapp[ghost.y + 1][ghost.x] == '8' || mapp[ghost.y + 1][ghost.x] == 'p')) {
+                ghost.y++;
+            }
+        }
+        else {
+            // Chase Pac-Man
+            if (ghost.x > pacman.x && ghost.x > 0 &&
+                (mapp[ghost.y][ghost.x - 1] == '0' || mapp[ghost.y][ghost.x - 1] == '8' || mapp[ghost.y][ghost.x - 1] == 'p')) {
+                ghost.x--; //kenanan
+            } else if (ghost.x < pacman.x && ghost.x < 28 &&
+                       (mapp[ghost.y][ghost.x + 1] == '0' || mapp[ghost.y][ghost.x + 1] == '8' || mapp[ghost.y][ghost.x + 1] == 'p')) {
+                ghost.x++; //kekiri
+            } else if (ghost.y > pacman.y && ghost.y > 0 &&
+                       (mapp[ghost.y - 1][ghost.x] == '0' || mapp[ghost.y - 1][ghost.x] == '8' || mapp[ghost.y - 1][ghost.x] == 'p')) {
+                ghost.y--; //keatas
+            } else if (ghost.y < pacman.y && ghost.y < 30 &&
+                       (mapp[ghost.y + 1][ghost.x] == '0' || mapp[ghost.y + 1][ghost.x] == '8' || mapp[ghost.y + 1][ghost.x] == 'p')) {
+                ghost.y++; //kebawah
+            }
+        }
+
+    // Render ghost's new position
+    gotoxy(ghost.x, ghost.y - 2);
+    cout << ghost.color << ghost.shape << reset;
+}
 
 
 
