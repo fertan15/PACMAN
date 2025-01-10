@@ -355,6 +355,82 @@ bool isCollide(player &pacman, player ghost[4], bool power)
     }
 }
 
+void makan_ghost(player &pacman, player ghost[], bool power, int &score)
+{
+        if(pacman.x == ghost[0].x && pacman.y == ghost[0].y)
+        {
+            // Erase ghost's current position
+            gotoxy(ghost[0].x, ghost[0].y - 2);
+                cout << yellow << pacman.shape << reset;
+
+            score+=1000;//makan ghost dapet 1000
+            ghost[0].x = 14;
+            ghost[0].y = 11;
+            Beep(3000, 100);
+
+             // Draw the ghost in its new position
+            gotoxy(ghost[0].x, ghost[0].y - 2);
+            if(power==false)
+                cout << ghost[0].color << ghost[0].shape << reset;
+            else
+                cout << "\033[44m" << ghost[0].shape << reset;
+        }
+        else if(pacman.x == ghost[1].x && pacman.y == ghost[1].y)
+        {
+            // Erase ghost's current position
+            gotoxy(ghost[1].x, ghost[1].y - 2);
+                cout << yellow << pacman.shape << reset;
+
+            score+=1000;//makan ghost dapet 1000
+            ghost[1].x = 14;
+            ghost[1].y = 11;
+            Beep(3000, 100);
+
+             // Draw the ghost in its new position
+            gotoxy(ghost[1].x, ghost[1].y - 2);
+            if(power==false)
+                cout << ghost[1].color << ghost[1].shape << reset;
+            else
+                cout << "\033[44m" << ghost[1].shape << reset;
+        }
+        else if(pacman.x == ghost[2].x && pacman.y == ghost[2].y)
+         {
+           // Erase ghost's current position
+            gotoxy(ghost[2].x, ghost[2].y - 2);
+              cout << yellow << pacman.shape << reset;
+
+            score+=1000;//makan ghost dapet 1000
+            ghost[2].x = 14;
+            ghost[2].y = 11;
+            Beep(3000, 100);
+
+             // Draw the ghost in its new position
+            gotoxy(ghost[2].x, ghost[2].y - 2);
+            if(power==false)
+                cout << ghost[2].color << ghost[2].shape << reset;
+            else
+                cout << "\033[44m" << ghost[2].shape << reset;
+        }
+        else if(pacman.x == ghost[3].x && pacman.y == ghost[3].y)
+         {
+            // Erase ghost's current position
+            gotoxy(ghost[3].x, ghost[3].y - 2);
+            cout << yellow << pacman.shape << reset;
+
+            score+=1000;//makan ghost dapet 1000
+            ghost[3].x = 14;
+            ghost[3].y = 11;
+            Beep(3000, 100);
+
+             // Draw the ghost in its new position
+            gotoxy(ghost[3].x, ghost[3].y - 2);
+            if(power==false)
+                cout << ghost[3].color << ghost[3].shape << reset;
+            else
+                cout << "\033[44m" << ghost[3].shape << reset;
+        }
+
+}
 
 void move_ghost(player &ghost, int &current_dir, player &pacman, bool power) {
     const int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
@@ -656,4 +732,3 @@ int main(){
     cout << endl << endl;
     return 0;
 }
-
