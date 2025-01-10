@@ -337,24 +337,15 @@ void cek_pacman(player pacman, int &score, bool &power)
 }
 
 
-bool isCollide(player &pacman, player ghost[4], bool power)
-{
-    if(power)
-        return false;
-    else{
-        if(pacman.x == ghost[0].x && pacman.y == ghost[0].y)
+bool isCollide(player &pacman, player ghost[4], bool power) {
+    if (power) return false;
+    for (int i = 0; i < 4; i++) {
+        if (pacman.x == ghost[i].x && pacman.y == ghost[i].y) {
             return true;
-        else if(pacman.x == ghost[1].x && pacman.y == ghost[1].y)
-            return true;
-        else if(pacman.x == ghost[2].x && pacman.y == ghost[2].y)
-            return true;
-        else if(pacman.x == ghost[3].x && pacman.y == ghost[3].y)
-            return true;
-        else
-            return false;
+        }
     }
+    return false;
 }
-
 void makan_ghost(player &pacman, player ghost[], bool power, int &score)
 {
         if(pacman.x == ghost[0].x && pacman.y == ghost[0].y)
@@ -622,7 +613,8 @@ void play(int &score, string &name)
                 cout << "CONGRATS"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << ".";
             gotoxy(40, 13);
                 cout << "WELCOME"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." ; cout << "TO THE HELLISH STAGE" ;
-            gotoxy(40, 16);
+            gotoxy(40, 14);
+                gotoxy(40, 16);
         cout << "T"; Sleep(100);cout << "R"; Sleep(100);cout << "A"; Sleep(100);cout << "N"; Sleep(100);cout << "S"; Sleep(100);cout << "P"; Sleep(100);cout << "O"; Sleep(100);cout << "R"; Sleep(100);cout << "T"; Sleep(100);cout << "I"; Sleep(100);cout << "N"; Sleep(100);cout << "G"; Sleep(100);
         cout << "."; Sleep(500);cout << "."; Sleep(500);cout << "."; Sleep(500);
         }
@@ -686,23 +678,12 @@ void play(int &score, string &name)
                 cout << "SCORE : " << score;
             gotoxy(40, 9);
                 cout << "USE W/A/S/D TO MOVE";
-            if(isWin())
-            {
-            gotoxy(40, 12);
-                cout << "CONGRATS"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << ".";
-            gotoxy(40, 13);
-                cout << "GACOR"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." ; cout << "YOU'VE SURVIVED THE HELLISH STAGE" ;
-            }
-
 
         }while(!isCollide(pacman, ghost,power) && isWin()==false);
     }
     Beep(5000, 1000);
-    if(!isWin())
-    {
     gotoxy(40, 12);
         cout << "GAME OVER"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." << endl;
-    }
     gotoxy(40, 13);
         cout <<"PLEASE INSERT YOUR NAME : "; cin >> name; Sleep(500);
     gotoxy(40, 16);
