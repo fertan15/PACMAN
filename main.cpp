@@ -315,7 +315,7 @@ int menu() {
     }
 }
 
-void cek_pacman(player pacman, int &score, bool &power)
+void cek_pacman(player pacman, int &score, bool &power, int &timer)
 {
     if(mapp[pacman.y][pacman.x] == '0')
     {
@@ -329,6 +329,7 @@ void cek_pacman(player pacman, int &score, bool &power)
         mapp[pacman.y][pacman.x] = '8';
         Beep(550, 350);
         Sleep(500);
+        timer=0;
     }
     else
         Sleep(100);
@@ -346,154 +347,82 @@ bool isCollide(player &pacman, player ghost[4], bool power) {
     }
     return false;
 }
+
 void makan_ghost(player &pacman, player ghost[], bool power, int &score)
 {
-        if(pacman.x == ghost[0].x && pacman.y == ghost[0].y)
+    for(int i = 0;i<4;i++){
+        if(pacman.x == ghost[i].x && pacman.y == ghost[i].y)
         {
-            // Erase ghost's current position
-            gotoxy(ghost[0].x, ghost[0].y - 2);
-                cout << yellow << pacman.shape << reset;
-
             score+=1000;//makan ghost dapet 1000
-            ghost[0].x = 14;
-            ghost[0].y = 11;
+            ghost[i].x = 14;
+            ghost[i].y = 11;
             Beep(3000, 100);
-
-             // Draw the ghost in its new position
-            gotoxy(ghost[0].x, ghost[0].y - 2);
-            if(power==false)
-                cout << ghost[0].color << ghost[0].shape << reset;
-            else
-                cout << "\033[44m" << ghost[0].shape << reset;
-        }
-        else if(pacman.x == ghost[1].x && pacman.y == ghost[1].y)
-        {
-            // Erase ghost's current position
-            gotoxy(ghost[1].x, ghost[1].y - 2);
-                cout << yellow << pacman.shape << reset;
-
-            score+=1000;//makan ghost dapet 1000
-            ghost[1].x = 14;
-            ghost[1].y = 11;
-            Beep(3000, 100);
-
-             // Draw the ghost in its new position
-            gotoxy(ghost[1].x, ghost[1].y - 2);
-            if(power==false)
-                cout << ghost[1].color << ghost[1].shape << reset;
-            else
-                cout << "\033[44m" << ghost[1].shape << reset;
-        }
-        else if(pacman.x == ghost[2].x && pacman.y == ghost[2].y)
-         {
-           // Erase ghost's current position
-            gotoxy(ghost[2].x, ghost[2].y - 2);
-              cout << yellow << pacman.shape << reset;
-
-            score+=1000;//makan ghost dapet 1000
-            ghost[2].x = 14;
-            ghost[2].y = 11;
-            Beep(3000, 100);
-
-             // Draw the ghost in its new position
-            gotoxy(ghost[2].x, ghost[2].y - 2);
-            if(power==false)
-                cout << ghost[2].color << ghost[2].shape << reset;
-            else
-                cout << "\033[44m" << ghost[2].shape << reset;
-        }
-        else if(pacman.x == ghost[3].x && pacman.y == ghost[3].y)
-         {
-            // Erase ghost's current position
-            gotoxy(ghost[3].x, ghost[3].y - 2);
-            cout << yellow << pacman.shape << reset;
-
-            score+=1000;//makan ghost dapet 1000
-            ghost[3].x = 14;
-            ghost[3].y = 11;
-            Beep(3000, 100);
-
-             // Draw the ghost in its new position
-            gotoxy(ghost[3].x, ghost[3].y - 2);
-            if(power==false)
-                cout << ghost[3].color << ghost[3].shape << reset;
-            else
-                cout << "\033[44m" << ghost[3].shape << reset;
-        }
-
-}
-
-void move_ghost(player &ghost, int &current_dir, player &pacman, bool power) {
-    const int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
-
-    gotoxy(ghost.x, ghost.y - 2);
-    if (mapp[ghost.y][ghost.x] == '8')
-        cout << ' ';
-    else if (mapp[ghost.y][ghost.x] == '0')
-        cout << yellow << '.' << reset;
-    else if (mapp[ghost.y][ghost.x] == 'p')
-        cout << yellow << 'o' << reset;
-
-    if (ghost.y == 15 && ghost.x > 26)
-        ghost.x = 1;
-    else if (ghost.y == 15 && ghost.x < 1)
-        ghost.x = 27;
-
-    if (power) {
-        if (ghost.x < pacman.x) {
-            if (ghost.x > 0 && (mapp[ghost.y][ghost.x - 1] == '0' || mapp[ghost.y][ghost.x - 1] == '8' || mapp[ghost.y][ghost.x - 1] == 'p')) {
-                ghost.x--;
-            }
-        } else if (ghost.x > pacman.x) {
-            if (ghost.x < 28 && (mapp[ghost.y][ghost.x + 1] == '0' || mapp[ghost.y][ghost.x + 1] == '8' || mapp[ghost.y][ghost.x + 1] == 'p')) {
-                ghost.x++;
-            }
-        }
-
-        if (ghost.y < pacman.y) {
-            if (ghost.y > 0 && (mapp[ghost.y - 1][ghost.x] == '0' || mapp[ghost.y - 1][ghost.x] == '8' || mapp[ghost.y - 1][ghost.x] == 'p')) {
-                ghost.y--;
-            }
-        } else if (ghost.y > pacman.y) {
-            if (ghost.y < 30 && (mapp[ghost.y + 1][ghost.x] == '0' || mapp[ghost.y + 1][ghost.x] == '8' || mapp[ghost.y + 1][ghost.x] == 'p')) {
-                ghost.y++;
-            }
-        }
-    } else {
-        vector<pair<int, int>> directions = {
-            {0, -1}, // UP
-            {0, 1},  // DOWN
-            {-1, 0}, // LEFT
-            {1, 0}   // RIGHT
-        };
-
-        int reverse_dir = -1;
-        if (current_dir == UP) reverse_dir = DOWN;
-        if (current_dir == DOWN) reverse_dir = UP;
-        if (current_dir == LEFT) reverse_dir = RIGHT;
-        if (current_dir == RIGHT) reverse_dir = LEFT;
-
-        vector<int> valid_moves;
-        for (int i = 0; i < 4; ++i) {
-            if (i == reverse_dir) continue;
-            int new_x = ghost.x + directions[i].first;
-            int new_y = ghost.y + directions[i].second;
-            char map_cell = mapp[new_y][new_x];
-            if (map_cell == '0' || map_cell == '8' || map_cell == 'p') {
-                valid_moves.push_back(i);
-            }
-        }
-
-        if (!valid_moves.empty()) {
-            srand(time(NULL) ^ ghost.x ^ ghost.y);
-            current_dir = valid_moves[rand() % valid_moves.size()];
-            ghost.x += directions[current_dir].first;
-            ghost.y += directions[current_dir].second;
         }
     }
 
+
+}
+
+void move_ghost(player &ghost, int &current_dir, bool power) {
+
+    // arah jalan
+    const int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
+    // hapus ghost
     gotoxy(ghost.x, ghost.y - 2);
-    cout << ghost.color << ghost.shape << reset;
+    if (mapp[ghost.y][ghost.x] == '8') // gaada coin
+        cout << ' ';
+    else if (mapp[ghost.y][ghost.x] == '0') // Coin
+        cout << yellow << '.' << reset;
+    else if (mapp[ghost.y][ghost.x] == 'p') // Power pellet
+        cout << yellow << 'o' << reset;
+
+    //kalo lewat tunnel
+    if(ghost.y == 15 && ghost.x > 26)
+        ghost.x = 1;
+    else if(ghost.y == 15 && ghost.x < 1)
+            ghost.x = 27;
+
+
+    vector<pair<int, int>> directions = {
+        {0, -1}, // UP
+        {0, 1},  // DOWN
+        {-1, 0}, // LEFT
+        {1, 0}   // RIGHT
+    };
+
+    // biar ga bisa jalan mundur
+    int reverse_dir = -1;
+    if (current_dir == UP) reverse_dir = DOWN;
+    if (current_dir == DOWN) reverse_dir = UP;
+    if (current_dir == LEFT) reverse_dir = RIGHT;
+    if (current_dir == RIGHT) reverse_dir = LEFT;
+
+    // arah yang bisa dijalan
+    vector<int> valid_moves;
+    for (int i = 0; i < 4; ++i) {
+        if (i == reverse_dir) continue; // kalo mundur di skip
+        int new_x = ghost.x + directions[i].first;
+        int new_y = ghost.y + directions[i].second;
+        char map_cell = mapp[new_y][new_x];
+        // Cek bkn wall
+        if (map_cell == '0' || map_cell == '8' || map_cell == 'p') {
+            valid_moves.push_back(i);
+        }
+    }
+
+    // milih random
+    if (!valid_moves.empty()) {
+        current_dir = valid_moves[rand() % valid_moves.size()];
+        ghost.x += directions[current_dir].first;
+        ghost.y += directions[current_dir].second;
+    }
+
+    // Draw the ghost in its new position
+    gotoxy(ghost.x, ghost.y - 2);
+    if(power==false)
+        cout << ghost.color << ghost.shape << reset;
+    else
+        cout << "\033[44m" << ghost.shape << reset;
 }
 
 void move_ghost_hard(player &ghost, player &pacman, bool power) {
@@ -544,8 +473,10 @@ void move_ghost_hard(player &ghost, player &pacman, bool power) {
         }
 
     // Render ghost's new position
-    gotoxy(ghost.x, ghost.y - 2);
-    cout << ghost.color << ghost.shape << reset;
+    if(power==false)
+        cout << ghost.color << ghost.shape << reset;
+    else
+        cout << "\033[44m" << ghost.shape << reset;
 }
 
 void play(int &score, string &name)
@@ -590,100 +521,122 @@ void play(int &score, string &name)
 
     //initialize cetak2
     gotoxy(0,0);
-    printMap(); // cetak map
+        printMap(); // cetak map
     gotoxy(pacman.x,pacman.y-2);
         cout << yellow << pacman.shape << reset;
         //kalo makan power pelet
         bool power = false;
+        int timer=100;
     do{
+        if(timer==50)
+            power = false;
+
+        timer++;
         move_pacman(pacman,input);
-        move_ghost(ghost[0], ghost[0].dir, pacman, power);
-        move_ghost(ghost[1], ghost[1].dir, pacman, power);
-        move_ghost(ghost[2], ghost[2].dir, pacman, power);
-        move_ghost(ghost[3], ghost[3].dir, pacman, power);
-        cek_pacman(pacman, score, power); // <- per-pelet peletan
+        move_ghost(ghost[0], ghost[0].dir, power);
+        move_ghost(ghost[1], ghost[1].dir, power);
+        move_ghost(ghost[2], ghost[2].dir, power);
+        move_ghost(ghost[3], ghost[3].dir, power);
+        cek_pacman(pacman,score,power,timer); // <- per-pelet peletan
+        if(power == true)
+           makan_ghost(pacman,ghost,power,score);
         Sleep(100);
         gotoxy(40, 6);
             cout << "SCORE : " << score;
         gotoxy(40, 9);
             cout << "USE W/A/S/D TO MOVE";
+
         if(isWin())
         {
             gotoxy(40, 12);
                 cout << "CONGRATS"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << ".";
-            gotoxy(40, 13);
-                cout << "WELCOME"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." ; cout << "TO THE HELLISH STAGE" ;
-            gotoxy(40, 14);
-                gotoxy(40, 16);
-        cout << "T"; Sleep(100);cout << "R"; Sleep(100);cout << "A"; Sleep(100);cout << "N"; Sleep(100);cout << "S"; Sleep(100);cout << "P"; Sleep(100);cout << "O"; Sleep(100);cout << "R"; Sleep(100);cout << "T"; Sleep(100);cout << "I"; Sleep(100);cout << "N"; Sleep(100);cout << "G"; Sleep(100);
-        cout << "."; Sleep(500);cout << "."; Sleep(500);cout << "."; Sleep(500);
+//            gotoxy(40, 13);
+//                cout << "WELCOME"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." ; cout << "TO THE HELLISH STAGE" ;
+//            gotoxy(40, 16);
+//        cout << "T"; Sleep(100);cout << "R"; Sleep(100);cout << "A"; Sleep(100);cout << "N"; Sleep(100);cout << "S"; Sleep(100);cout << "P"; Sleep(100);cout << "O"; Sleep(100);cout << "R"; Sleep(100);cout << "T"; Sleep(100);cout << "I"; Sleep(100);cout << "N"; Sleep(100);cout << "G"; Sleep(100);
+//        cout << "."; Sleep(500);cout << "."; Sleep(500);cout << "."; Sleep(500);
         }
 
     }while(!isCollide(pacman, ghost,power) && isWin()==false);
-    //HELL MODE
-    if(isWin())
-    {
-        system("cls");
-        reset_map();
 
-        //pacman initialize
-        pacman.x = 13;
-        pacman.y = 18;
-        pacman.shape = '<';
-        char input ='D';
-
-        //ghost initialize
-        //dir = direction || UP = 0,  DOWN = 1,  LEFT = 2,  RIGHT = 3.
-        //setan kiri atas
-        ghost[0].x = 1;
-        ghost[0].y = 2;
-        ghost[0].shape= '"';
-        ghost[0].color= "\033[41m";
-        ghost[0].dir = 3;
-        //setan kanan atas
-        ghost[1].x = 26;
-        ghost[1].y = 3;
-        ghost[1].shape= '"';
-        ghost[1].color= "\033[46m";
-        ghost[1].dir = 2;
-        //setan kiri bawah
-        ghost[2].x = 1;
-        ghost[2].y = 30;
-        ghost[2].shape= '"';
-        ghost[2].color= "\033[42m";
-        ghost[2].dir = 0;
-        //setan kanan bawah
-        ghost[3].x = 26;
-        ghost[3].y = 30;
-        ghost[3].shape= '"';
-        ghost[3].color= "\033[43m";
-        ghost[3].dir = 0;
-
-        //initialize cetak2
-        gotoxy(0,0);
-            printMap(); // cetak map
-        gotoxy(pacman.x,pacman.y-2);
-            cout << yellow << pacman.shape << reset;
-            //kalo makan power pelet
-            bool power = false;
-        do{
-            move_pacman(pacman,input);
-            move_ghost_hard(ghost[0], pacman, power);
-            move_ghost_hard(ghost[1], pacman, power);
-            move_ghost_hard(ghost[2], pacman, power);
-            move_ghost_hard(ghost[3], pacman, power);
-            cek_pacman(pacman, score, power); // <- per-pelet peletan
-            Sleep(100);
-            gotoxy(40, 6);
-                cout << "SCORE : " << score;
-            gotoxy(40, 9);
-                cout << "USE W/A/S/D TO MOVE";
-
-        }while(!isCollide(pacman, ghost,power) && isWin()==false);
-    }
+//    //HELL MODE
+//    if(isWin())
+//    {
+//        system("cls");
+//        reset_map();
+//
+//        //pacman initialize
+//        pacman.x = 13;
+//        pacman.y = 18;
+//        pacman.shape = '<';
+//        char input ='D';
+//
+//        //ghost initialize
+//        //dir = direction || UP = 0,  DOWN = 1,  LEFT = 2,  RIGHT = 3.
+//        //setan kiri atas
+//        ghost[0].x = 1;
+//        ghost[0].y = 2;
+//        ghost[0].shape= '"';
+//        ghost[0].color= "\033[41m";
+//        ghost[0].dir = 3;
+//        //setan kanan atas
+//        ghost[1].x = 26;
+//        ghost[1].y = 3;
+//        ghost[1].shape= '"';
+//        ghost[1].color= "\033[46m";
+//        ghost[1].dir = 2;
+//        //setan kiri bawah
+//        ghost[2].x = 1;
+//        ghost[2].y = 30;
+//        ghost[2].shape= '"';
+//        ghost[2].color= "\033[42m";
+//        ghost[2].dir = 0;
+//        //setan kanan bawah
+//        ghost[3].x = 26;
+//        ghost[3].y = 30;
+//        ghost[3].shape= '"';
+//        ghost[3].color= "\033[43m";
+//        ghost[3].dir = 0;
+//
+//        //initialize cetak2
+//        gotoxy(0,0);
+//            printMap(); // cetak map
+//        gotoxy(pacman.x,pacman.y-2);
+//            cout << yellow << pacman.shape << reset;
+//            //kalo makan power pelet
+//            bool power = false;
+//            int timer = 100;
+//        do{
+//            if(timer==50)
+//                power = false;
+//            move_pacman(pacman,input);
+//            move_ghost_hard(ghost[0], pacman, power);
+//            move_ghost_hard(ghost[1], pacman, power);
+//            move_ghost_hard(ghost[2], pacman, power);
+//            move_ghost_hard(ghost[3], pacman, power);
+//            cek_pacman(pacman, score, power, timer); // <- per-pelet peletan
+//            Sleep(100);
+//            gotoxy(40, 6);
+//                cout << "SCORE : " << score;
+//            gotoxy(40, 9);
+//                cout << "USE W/A/S/D TO MOVE";
+//            if(isWin())
+//            {
+//            gotoxy(40, 12);
+//                cout << "CONGRATS"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << ".";
+//            gotoxy(40, 13);
+//                cout << "GACOR"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." ; cout << "YOU'VE SURVIVED THE HELLISH STAGE" ;
+//           }
+//
+//
+//        }while(!isCollide(pacman, ghost,power) && isWin()==false);
+//    }
     Beep(5000, 1000);
+    if(!isWin())
+    {
     gotoxy(40, 12);
         cout << "GAME OVER"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." << endl;
+    }
     gotoxy(40, 13);
         cout <<"PLEASE INSERT YOUR NAME : "; cin >> name; Sleep(500);
     gotoxy(40, 16);
@@ -693,7 +646,7 @@ void play(int &score, string &name)
 
 int main(){
     cek_file_leaderboard();
-    srand((time(0))); // Seed for random number generation
+    srand((time(0)));
     int pil;
     do{
             int score=0;
@@ -723,3 +676,4 @@ int main(){
     cout << endl << endl;
     return 0;
 }
+
