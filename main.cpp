@@ -535,8 +535,7 @@ void play(int &score, string &name)
                 cout << "CONGRATS"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << ".";
             gotoxy(40, 13);
                 cout << "WELCOME"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." ; cout << "TO THE HELLISH STAGE" ;
-            gotoxy(40, 14);
-                gotoxy(40, 16);
+            gotoxy(40, 16);
         cout << "T"; Sleep(100);cout << "R"; Sleep(100);cout << "A"; Sleep(100);cout << "N"; Sleep(100);cout << "S"; Sleep(100);cout << "P"; Sleep(100);cout << "O"; Sleep(100);cout << "R"; Sleep(100);cout << "T"; Sleep(100);cout << "I"; Sleep(100);cout << "N"; Sleep(100);cout << "G"; Sleep(100);
         cout << "."; Sleep(500);cout << "."; Sleep(500);cout << "."; Sleep(500);
         }
@@ -601,12 +600,23 @@ void play(int &score, string &name)
                 cout << "SCORE : " << score;
             gotoxy(40, 9);
                 cout << "USE W/A/S/D TO MOVE";
+            if(isWin())
+            {
+            gotoxy(40, 12);
+                cout << "CONGRATS"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << ".";
+            gotoxy(40, 13);
+                cout << "GACOR"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." ; cout << "YOU'VE SURVIVED THE HELLISH STAGE" ;
+            }
+
 
         }while(!isCollide(pacman, ghost,power) && isWin()==false);
     }
     Beep(5000, 1000);
+    if(!isWin())
+    {
     gotoxy(40, 12);
         cout << "GAME OVER"; Sleep(500); cout << "."; Sleep(500); cout << "."; Sleep(500); cout << "." << endl;
+    }
     gotoxy(40, 13);
         cout <<"PLEASE INSERT YOUR NAME : "; cin >> name; Sleep(500);
     gotoxy(40, 16);
