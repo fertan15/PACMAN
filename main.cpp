@@ -356,62 +356,75 @@ bool isCollide(player &pacman, player ghost[4], bool power)
 }
 
 
-void move_ghost(player &ghost, int &current_dir) {
-
-    // Define direction codes for easier reference
+void move_ghost(player &ghost, int &current_dir, player &pacman, bool power) {
     const int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3;
-    // Erase ghost's current position
+
     gotoxy(ghost.x, ghost.y - 2);
-    if (mapp[ghost.y][ghost.x] == '8') // Path without coin
+    if (mapp[ghost.y][ghost.x] == '8')
         cout << ' ';
-    else if (mapp[ghost.y][ghost.x] == '0') // Coin
+    else if (mapp[ghost.y][ghost.x] == '0')
         cout << yellow << '.' << reset;
-    else if (mapp[ghost.y][ghost.x] == 'p') // Power pellet
+    else if (mapp[ghost.y][ghost.x] == 'p')
         cout << yellow << 'o' << reset;
 
-    //kalo lewat tunnel
-    if(ghost.y == 15 && ghost.x > 26)
+    if (ghost.y == 15 && ghost.x > 26)
         ghost.x = 1;
-    else if(ghost.y == 15 && ghost.x < 1)
-            ghost.x = 27;
+    else if (ghost.y == 15 && ghost.x < 1)
+        ghost.x = 27;
 
-    // Define all possible movements (dx, dy) for UP, DOWN, LEFT, RIGHT
-    vector<pair<int, int>> directions = {
-        {0, -1}, // UP
-        {0, 1},  // DOWN
-        {-1, 0}, // LEFT
-        {1, 0}   // RIGHT
-    };
+    if (power) {
+        if (ghost.x < pacman.x) {
+            if (ghost.x > 0 && (mapp[ghost.y][ghost.x - 1] == '0' || mapp[ghost.y][ghost.x - 1] == '8' || mapp[ghost.y][ghost.x - 1] == 'p')) {
+                ghost.x--;
+            }
+        } else if (ghost.x > pacman.x) {
+            if (ghost.x < 28 && (mapp[ghost.y][ghost.x + 1] == '0' || mapp[ghost.y][ghost.x + 1] == '8' || mapp[ghost.y][ghost.x + 1] == 'p')) {
+                ghost.x++;
+            }
+        }
 
-    // Reverse direction mapping
-    int reverse_dir = -1;
-    if (current_dir == UP) reverse_dir = DOWN;
-    if (current_dir == DOWN) reverse_dir = UP;
-    if (current_dir == LEFT) reverse_dir = RIGHT;
-    if (current_dir == RIGHT) reverse_dir = LEFT;
+        if (ghost.y < pacman.y) {
+            if (ghost.y > 0 && (mapp[ghost.y - 1][ghost.x] == '0' || mapp[ghost.y - 1][ghost.x] == '8' || mapp[ghost.y - 1][ghost.x] == 'p')) {
+                ghost.y--;
+            }
+        } else if (ghost.y > pacman.y) {
+            if (ghost.y < 30 && (mapp[ghost.y + 1][ghost.x] == '0' || mapp[ghost.y + 1][ghost.x] == '8' || mapp[ghost.y + 1][ghost.x] == 'p')) {
+                ghost.y++;
+            }
+        }
+    } else {
+        vector<pair<int, int>> directions = {
+            {0, -1}, // UP
+            {0, 1},  // DOWN
+            {-1, 0}, // LEFT
+            {1, 0}   // RIGHT
+        };
 
-    // Filter valid moves, excluding reverse direction
-    vector<int> valid_moves;
-    for (int i = 0; i < 4; ++i) {
-        if (i == reverse_dir) continue; // Exclude reverse direction
-        int new_x = ghost.x + directions[i].first;
-        int new_y = ghost.y + directions[i].second;
-        char map_cell = mapp[new_y][new_x];
-        // Check that the new position is a valid path
-        if (map_cell == '0' || map_cell == '8' || map_cell == 'p') {
-            valid_moves.push_back(i);
+        int reverse_dir = -1;
+        if (current_dir == UP) reverse_dir = DOWN;
+        if (current_dir == DOWN) reverse_dir = UP;
+        if (current_dir == LEFT) reverse_dir = RIGHT;
+        if (current_dir == RIGHT) reverse_dir = LEFT;
+
+        vector<int> valid_moves;
+        for (int i = 0; i < 4; ++i) {
+            if (i == reverse_dir) continue;
+            int new_x = ghost.x + directions[i].first;
+            int new_y = ghost.y + directions[i].second;
+            char map_cell = mapp[new_y][new_x];
+            if (map_cell == '0' || map_cell == '8' || map_cell == 'p') {
+                valid_moves.push_back(i);
+            }
+        }
+
+        if (!valid_moves.empty()) {
+            srand(time(NULL) ^ ghost.x ^ ghost.y);
+            current_dir = valid_moves[rand() % valid_moves.size()];
+            ghost.x += directions[current_dir].first;
+            ghost.y += directions[current_dir].second;
         }
     }
 
-    // Choose a random valid direction if any are available
-    if (!valid_moves.empty()) {
-        srand(time(NULL) ^ ghost.x ^ ghost.y);
-        current_dir = valid_moves[rand() % valid_moves.size()];
-        ghost.x += directions[current_dir].first;
-        ghost.y += directions[current_dir].second;
-    }
-
-    // Draw the ghost in its new position
     gotoxy(ghost.x, ghost.y - 2);
     cout << ghost.color << ghost.shape << reset;
 }
@@ -468,8 +481,6 @@ void move_ghost_hard(player &ghost, player &pacman, bool power) {
     cout << ghost.color << ghost.shape << reset;
 }
 
-
-
 void play(int &score, string &name)
 {
     reset_map();
@@ -512,17 +523,17 @@ void play(int &score, string &name)
 
     //initialize cetak2
     gotoxy(0,0);
-        printMap(); // cetak map
+    printMap(); // cetak map
     gotoxy(pacman.x,pacman.y-2);
         cout << yellow << pacman.shape << reset;
         //kalo makan power pelet
         bool power = false;
     do{
         move_pacman(pacman,input);
-        move_ghost(ghost[0], ghost[0].dir);
-        move_ghost(ghost[1], ghost[1].dir);
-        move_ghost(ghost[2], ghost[2].dir);
-        move_ghost(ghost[3], ghost[3].dir);
+        move_ghost(ghost[0], ghost[0].dir, pacman, power);
+        move_ghost(ghost[1], ghost[1].dir, pacman, power);
+        move_ghost(ghost[2], ghost[2].dir, pacman, power);
+        move_ghost(ghost[3], ghost[3].dir, pacman, power);
         cek_pacman(pacman, score, power); // <- per-pelet peletan
         Sleep(100);
         gotoxy(40, 6);
@@ -541,7 +552,6 @@ void play(int &score, string &name)
         }
 
     }while(!isCollide(pacman, ghost,power) && isWin()==false);
-
     //HELL MODE
     if(isWin())
     {
