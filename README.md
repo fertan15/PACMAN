@@ -72,5 +72,3 @@ The code is organized into several key functions:
 -   `gotoxy()`: A utility function to control the cursor position in the Windows console.
 
 
-
-make the compile tutorial in vscode or ide
