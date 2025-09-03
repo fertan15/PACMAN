@@ -33,14 +33,8 @@ This project is designed for a Windows environment and requires a C++ compiler t
 - A C++ compiler (like g++ from MinGW-w64).
 - Windows Operating System.
 
-### Compilation Steps
-Of course, here is a simpler guide.
-
+### Compilation Steps Using an IDE (like Visual Studio)
 ---
-
-## How to Compile and Run
-
-### Using an IDE (like Visual Studio)
 
 1.  **Create Project**: Create a new "Console App" project in your IDE.
 2.  **Add Code**: Copy and paste your code into the main `.cpp` file created by the IDE (or add your existing file to the project).
