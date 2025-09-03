@@ -1,4 +1,3 @@
-Of course, here is a README file for your C++ Pac-Man project.
 
 ---
 
