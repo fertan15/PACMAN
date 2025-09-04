@@ -1,74 +1,101 @@
+# 🎮 Pac-Man Console Game  
+
+A recreation of the classic **Pac-Man arcade game**, developed in **C++** as part of a Programming Fundamentals project.  
+This game runs entirely in the **Windows console**, using ASCII graphics and the Windows Console API for rendering.  
+
+The project demonstrates fundamental programming concepts, including structured programming, file handling, basic AI, and interactive gameplay mechanics. Players can relive the retro experience of guiding Pac-Man through a maze, eating pellets, avoiding ghosts, and chasing high scores.  
 
 ---
 
-# Pac-Man Console Game
+## 📝 Introduction  
 
-A classic Pac-Man game recreation developed in C++ that runs in the Windows console. This project brings the arcade favorite to life with familiar gameplay mechanics, including navigating a maze, eating pellets, avoiding ghosts, and chasing high scores.
+The **Pac-Man Console Game** is designed as a beginner-friendly project to strengthen understanding of programming fundamentals through game development. It combines essential concepts such as loops, conditionals, arrays, functions, file handling, and simple AI into a fun, interactive application.  
 
-##  Gameplay
-The player controls Pac-Man through a maze, with the objective of eating all the pellets on the screen. Four ghosts roam the maze, trying to catch Pac-Man. If a ghost touches Pac-Man, the game is over.
+The game faithfully recreates the core mechanics of Pac-Man:  
+- Navigate the maze to eat pellets.  
+- Avoid the ghosts unless powered up by a special pellet.  
+- Score points for each pellet and ghost eaten.  
+- Compete for the top spot on the **persistent leaderboard**.  
 
-There are special "power pellets" located in the corners of the maze. When Pac-Man eats one of these, the ghosts temporarily turn blue and become vulnerable. Pac-Man can then eat the ghosts for extra points, and they will respawn in their starting box.
+This project highlights the integration of **game logic**, **user interaction**, and **file-based data persistence**, making it a comprehensive example of applied programming fundamentals.  
 
-The game also features the classic side tunnels, allowing Pac-Man and the ghosts to teleport from one side of the maze to the other.
-
-## Features
-
-- **Classic Pac-Man Gameplay**: Experience the traditional Pac-Man maze and objectives.
-- **Player Controls**: Move Pac-Man using the W, A, S, and D keys.
-- **Ghost AI**: Ghosts move randomly around the maze, providing a constant challenge. An unimplemented "Hell Mode" in the code suggests a more advanced chasing AI.
-- **Power Pellets**: Turn the tables on the ghosts by eating power pellets to make them vulnerable.
-- **Scoring System**:
-    - `100 points` for each regular pellet.
-    - `1000 points` for eating a ghost.
-- **Persistent Leaderboard**: Your score is saved to a `leaderboard.txt` file. You can view the top 5 high scores from the main menu.
-- **Interactive Menu**: A simple and intuitive menu to start the game, view the leaderboard, or exit.
-- **Console Graphics**: The game uses ASCII characters and Windows Console API for colors and cursor positioning to render the game board and characters.
-
-## How to Compile and Run
-
-This project is designed for a Windows environment and requires a C++ compiler that supports the C++11 standard or newer (for features like lambda functions). A popular choice is MinGW (g++).
-
-### Prerequisites
-- A C++ compiler (like g++ from MinGW-w64).
-- Windows Operating System.
-
-### Compilation Steps Using an IDE (like Visual Studio)
 ---
 
-1.  **Create Project**: Create a new "Console App" project in your IDE.
-2.  **Add Code**: Copy and paste your code into the main `.cpp` file created by the IDE (or add your existing file to the project).
-3.  **Link Library**: This is the most important step.
-    *   Go to your project's **Properties**.
-    *   Find the **Linker** -> **Input** section.
-    *   In **Additional Dependencies**, add `winmm.lib`.
-4.  **Clone Repository**: or instead of doing step 1,2,3 you can just clone this repository and open it in your code editor.
-5.  **Run**: Press **Ctrl+F5** or click the "Start Without Debugging" button to compile and run the game.
+## 🕹️ Gameplay  
 
+- The player controls Pac-Man using the **W, A, S, D keys** to move up, left, down, and right.  
+- Four ghosts roam the maze with random movement patterns. If Pac-Man collides with a ghost, the game ends.  
+- Special **power pellets** are placed in the maze corners. Eating one makes ghosts vulnerable (turning them blue), allowing Pac-Man to eat them for bonus points.  
+- **Side tunnels** allow Pac-Man and ghosts to teleport between the left and right sides of the maze, just like in the original arcade version.  
+- The game ends either when all pellets are eaten (**win**) or when Pac-Man is caught by a ghost (**loss**).  
 
-## Controls
+---
 
--   **W**: Move Up
--   **S**: Move Down
--   **A**: Move Left
--   **D**: Move Right
--   **Enter**: Select option in the menu
+## ✨ Features  
 
-## Code Structure
+- **Classic Pac-Man Gameplay**: Authentic maze, pellet-eating, ghost-chasing mechanics.  
+- **Player Controls**: Smooth navigation with `W`, `A`, `S`, `D` keys.  
+- **Ghost AI**: Random movement logic with potential for expansion (includes a commented “Hell Mode” ghost-chasing AI).  
+- **Power Pellets**: Temporarily reverse roles—Pac-Man hunts the ghosts!  
+- **Scoring System**:  
+  - `+100 points` per regular pellet.  
+  - `+1000 points` per ghost eaten.  
+- **Persistent Leaderboard**: Stores scores in `leaderboard.txt` and displays the **Top 5 high scores**.  
+- **Interactive Menu**: Start the game, view leaderboard, or exit.  
+- **ASCII Graphics**: Characters and walls drawn with symbols; colored output using the Windows Console API.  
 
-The code is organized into several key functions:
+---
 
--   `main()`: The main game loop which handles menu navigation and calls the play function.
--   `play()`: Contains the primary logic for a single game session, including initializing characters, handling movement, and checking for win/loss conditions.
--   `menu()`: Displays the main menu and handles user navigation.
--   `printMap()`: Renders the game board to the console using ASCII characters.
--   `move_pacman()`: Handles player input and updates Pac-Man's position.
--   `move_ghost()`: Implements a simple random movement AI for the ghosts.
--   `move_ghost_hard()`: (Commented out) An alternative, more aggressive AI where ghosts chase Pac-Man.
--   `isCollide()`: Checks for collisions between Pac-Man and ghosts.
--   `isWin()`: Checks if all pellets have been eaten.
--   `cek_pacman()`: Manages scoring and power-pellet effects when Pac-Man moves to a new tile.
--   `upload_score()` / `view_leaderboard()`: Functions to save player scores to `leaderboard.txt` and display them.
--   `gotoxy()`: A utility function to control the cursor position in the Windows console.
+## ⚙️ Technical Details  
 
+### Code Structure  
 
+The project is modularized into several core functions:  
+- **`main()`**: Game entry point; handles menu navigation.  
+- **`menu()`**: Renders and manages the main menu.  
+- **`play()`**: Core game loop for a single session.  
+- **`printMap()`**: Renders the maze using ASCII graphics.  
+- **`move_pacman()`**: Handles player input and Pac-Man’s movement.  
+- **`move_ghost()`**: Implements simple random AI for ghosts.  
+- **`move_ghost_hard()`**: (Optional) More advanced AI for aggressive ghost chasing.  
+- **`isCollide()`**: Detects collisions between Pac-Man and ghosts.  
+- **`isWin()`**: Checks if all pellets have been collected.  
+- **`cek_pacman()`**: Updates score and applies power-pellet effects.  
+- **`upload_score()` / `view_leaderboard()`**: Save scores to file and display rankings.  
+- **`gotoxy()`**: Utility for cursor positioning in the console.  
+
+---
+
+## 🛠️ How to Compile and Run  
+
+### Prerequisites  
+- **Operating System**: Windows  
+- **Compiler**: C++11-compatible compiler (e.g., MinGW-w64 `g++`)  
+- **Library**: `winmm.lib` (for Windows console handling)  
+
+### Steps Using Visual Studio IDE  
+1. **Create Project**: Start a new *Console App* project.  
+2. **Add Code**: Copy/paste or import the `.cpp` source file.  
+3. **Link Library**:  
+   - Go to **Project Properties** → **Linker** → **Input**.  
+   - Add `winmm.lib` under **Additional Dependencies**.  
+4. **Run**: Build and start the project (`Ctrl + F5`).  
+
+### Alternative: Clone and Run  
+```bash
+git clone https://github.com/yourusername/pacman-console-game.git
+cd pacman-console-game
+g++ pacman.cpp -o pacman.exe -lwinmm
+./pacman.exe
+```
+
+## 🎯 Learning Outcomes
+
+By completing this project, students will gain hands-on experience with:
+-Core C++ syntax (loops, conditionals, arrays).
+-Functions & modular programming.
+-Structs for character representation.
+-File handling for saving and retrieving leaderboard scores.
+-Random number generation for ghost AI.
+-Real-time input handling (_kbhit, _getch).
+-Console rendering techniques.
