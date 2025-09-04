@@ -1,5 +1,9 @@
 # 🎮 Pac-Man Console Game  
 
+<img width="1099" height="662" alt="image" src="https://github.com/user-attachments/assets/2ea55f4a-55da-4c00-a759-ba4a05768ca8" />
+<img width="1099" height="662" alt="image" src="https://github.com/user-attachments/assets/f8e3c8cc-ca54-4696-b34f-18e45aa2ff2f" />
+
+
 A recreation of the classic **Pac-Man arcade game**, developed in **C++** as part of a Programming Fundamentals project.  
 This game runs entirely in the **Windows console**, using ASCII graphics and the Windows Console API for rendering.  
 
