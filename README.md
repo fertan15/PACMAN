@@ -92,10 +92,10 @@ g++ pacman.cpp -o pacman.exe -lwinmm
 ## 🎯 Learning Outcomes
 
 By completing this project, students will gain hands-on experience with:
--Core C++ syntax (loops, conditionals, arrays).
--Functions & modular programming.
--Structs for character representation.
--File handling for saving and retrieving leaderboard scores.
--Random number generation for ghost AI.
--Real-time input handling (_kbhit, _getch).
--Console rendering techniques.
+- Core C++ syntax (loops, conditionals, arrays).
+- Functions & modular programming.
+- Structs for character representation.
+- File handling for saving and retrieving leaderboard scores.
+- Random number generation for ghost AI.
+- Real-time input handling (_kbhit, _getch).
+- Console rendering techniques.
