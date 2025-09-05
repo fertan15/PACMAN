@@ -87,7 +87,7 @@ The project is modularized into several core functions:
 
 ### Alternative: Clone and Run  
 ```bash
-git clone https://github.com/yourusername/pacman-console-game.git
+git clone https://github.com/fertan15/PACMAN
 cd pacman-console-game
 g++ pacman.cpp -o pacman.exe -lwinmm
 ./pacman.exe
