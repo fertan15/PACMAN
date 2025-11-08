@@ -388,7 +388,7 @@ void move_ghost_hard(player &ghost, player &pacman, bool power) {
         cout << "\033[44m" << ghost.shape << reset;
 }
 
-// --- main program ---
+// --- menu ---
 
 int menu() {
     xy men[4];
@@ -464,19 +464,19 @@ void play(int &score, string &name) {
     player ghost[4];
 
     // Hantu 0 (Merah) - Kiri Atas
-    ghost[0].x = 1; ghost[0].y = 2; ghost[0].shape = (char)234; 
+    ghost[0].x = 1; ghost[0].y = 2; ghost[0].shape = '"'; 
     ghost[0].color = "\033[41m"; ghost[0].dir = 3; 
 
     // Hantu 1 (Cyan) - Kanan Atas
-    ghost[1].x = 26; ghost[1].y = 3; ghost[1].shape = (char)234;
+    ghost[1].x = 26; ghost[1].y = 3; ghost[1].shape = '"';
     ghost[1].color = "\033[46m"; ghost[1].dir = 2; 
 
     // Hantu 2 (Hijau) - Kiri Bawah
-    ghost[2].x = 1; ghost[2].y = 30; ghost[2].shape = (char)234;
+    ghost[2].x = 1; ghost[2].y = 30; ghost[2].shape = '"';
     ghost[2].color = "\033[42m"; ghost[2].dir = 0; 
 
     // Hantu 3 (Magenta) - Kanan Bawah
-    ghost[3].x = 26; ghost[3].y = 30; ghost[3].shape = (char)234;
+    ghost[3].x = 26; ghost[3].y = 30; ghost[3].shape = '"';
     ghost[3].color = "\033[43m"; ghost[3].dir = 0; 
 
     gotoxy(0, 0);
